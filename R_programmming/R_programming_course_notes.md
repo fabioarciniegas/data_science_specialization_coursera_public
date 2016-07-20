@@ -6,9 +6,9 @@
  - Typical old school programming environment for empowered users to
 
 
-## R
+# R
 
- -
+ - New Zealand
  - 1991: Ross Ihaka and Robert Gentleman.
  - 1995: GNU
  - 2013: R 3.0.2
@@ -19,25 +19,21 @@
 
 # Console input and evaluation
 
-> # comments
-> # assignment
-> x <- 1
-> x
-[1] 1
-> # notice by default it's a vector. Also vectors 1-based
-> x <- 1:20
-> x
- [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20
+``` R
+ # comments
+ # assignment
+ x <- 1
+ x
+# notice by default it's a vector. Also vectors 1-based
+x <- 1:20
+x
+# [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20
+
+``` 
 
 # Basic data types
 
-Base types:
-
-> # character
-> # numeric
-> # integer
-> # complex 
-> # logical (boolean)
+Base types: character,  numeric,  integer, complex , logical (boolean)
 
 Most basic object is a vector. All same atomic types.
 A vector can only contain objects of the same class. Except for lists which is a vector that contain objects of different classes.
@@ -426,6 +422,82 @@ for(letter in x) {
 for(i in 1:4) print(x[i])
 ```
 
-# First functions
+# Functions
 
 See trivial_functions.R
+
+Functions are first class objects . Can be passed as arguments, used anonymously, and declared inside other functions.
+
+formal arguments can be inspected using the formals function.
+
+Argument matching can be done by position of name:
+
+``` R
+# all equivalent:
+ sd(mydata)
+ sd(x = mydata)
+ sd(x = mydata, na.rm = FALSE)
+ sd(na.rm = FALSE, x = mydata)
+ sd(na.rm = FALSE, mydata)
+```
+
+Parameter matching rules:
+ 1. Check for exact match for a named argument
+ 2. Check for a partial match
+ 3. Check for a positional match
+
+Lazy evaluation, of course. Variable argument number with "...". Any arguments that appear after ... on the argument list must be named explicitly and cannot be partially matched 
+
+## Scoping Rules
+
+Given a name and no specific environment listed, R firsts looks on the global environment, if not found look for it in the order of environments as specified in the search list:
+
+search()
+
+``` R
+search()
+# [1] ".GlobalEnv"        "tools:rstudio"     "package:stats"     "package:graphics"  "package:grDevices" "package:utils"     "package:datasets" 
+# [8] "package:methods"   "Autoloads"         "package:base"     
+```
+
+package.base always last.
+
+When a user loads a package with library the namespace of that package is put in position 2.
+
+### Lexical Scoping
+
+``` R
+foo <- function(x,y){
+    x/y*z
+    #where is Z taken from?
+}
+ 
+
+``` 
+The values of free variables are searched for in the environment for which the function was defined.
+
+an enviroment is a collection of symbol, value pares.
+environments have parents (except for the empty environment)
+function + environment = a closure or function closure
+
+To figure out the environment of a free variable, R recursively looks, starting with the environment where a function was defined
+
+``` R
+environment(cube)
+#<environment: 0x10c567a70>
+#ls(environment(cube))
+#[1] "n"   "pow"
+get("n",environment(cube))
+#[1] 3
+```
+
+Lexical scoping (R) looks for definition of free variables in the environment in which the function was defined. Dynamic scoping would do so in the environment it was called.
+
+## Dates and times
+
+POSIXct and POSIXlt for times. Dates as integers since the unix epoch.
+
+basic comments about time date for non-programmers. Just do as.Date and as.POSIXct ?strptime.
+
+
+
