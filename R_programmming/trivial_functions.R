@@ -17,3 +17,10 @@ column_mean <- function(m, removeNA=TRUE){
   }
   result
 }
+
+make.power <- function(n){
+  pow <- function(m){
+    n ^ m
+  }
+  pow
+}
