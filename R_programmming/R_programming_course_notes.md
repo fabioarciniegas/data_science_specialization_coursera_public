@@ -1,23 +1,18 @@
-# Notes
+# Introduction
 
- - R implementation/dialogue of S language as created (surprise) in bell labs 1976 by John Chambers.
- -  In 2004 insightful purchased S for $2mil. Several other iterations of purchases etc.
- - Fundamentals of S have not changed much since 1998
- - Typical old school programming environment for empowered users to
-
-
-# R
+## R history
 
  - New Zealand
  - 1991: Ross Ihaka and Robert Gentleman.
  - 1995: GNU
  - 2013: R 3.0.2
-
-# Design of R
-
+  - R implementation/dialogue of S language as created (surprise) in bell labs 1976 by John Chambers.
+ -  In 2004 insightful purchased S for $2mil. Several other iterations of purchases etc.
+ - Fundamentals of S have not changed much since 1998
+ - Basically a DSL for empowered users to do statistics
  - The base R system that you download from CRAN
 
-# Console input and evaluation
+## Console input and evaluation
 
 ``` R
  # comments
@@ -31,7 +26,7 @@ x
 
 ``` 
 
-# Basic data types
+## Basic data types
 
 Base types: character,  numeric,  integer, complex , logical (boolean)
 
@@ -70,9 +65,11 @@ x <- vector("numeric", length=10)
 
 Mixing results in least common denominator, meaning the one that can be represented most generally
 
-
+``` R
 y <- c(1.7,"a")
 [1] "1.7" "a"
+
+``` 
 
 
 ## explicit coercion
@@ -83,6 +80,7 @@ resulting in NAS
 
 constructed column-wise
 
+``` R
 > m <-matrix(nrow=1,ncol=1)
 > m
      [,1]
@@ -110,10 +108,16 @@ m
 [1,]    1    3    5    7    9
 [2,]    2    4    6    8   10
 
+``` 
+
 # cbind, rbind
+
+``` R
 
 x <- 1:10
 y <- 11:20
+
+``` 
 
 cbind(x,y) #consider them columns in the resulting matrix
 rbind(x,y)
@@ -122,6 +126,10 @@ rbind(x,y)
 # Factors
 ordered (profs) or unordered categorical data (labels)
 treated specially by modeling functions such as lm and glm
+
+``` R
+ 
+
 
 > x
 [1] yes no  yes no  yes
@@ -142,19 +150,26 @@ Levels: YES nooope
 > x
 [1] Si     nooope Si    
 Levels: Si nooope
+``` 
+## unclass
 
-# unclass
-> unclass(x)
+``` R
+ 
+
+ > unclass(x)
 [1] 2 1 2 1 2
 attr(,"levels")
 [1] "no"  "yes"
+```
 
-# missing values
+## missing values
 
 NaN and NA
 
 every NaN missing and therefore an NA, converse not necessarily true.
 
+``` R
+ 
 x<-c(1,2,NA,NaN,3,1,NaN)
 
 > x<-c(1,2,NA,NaN,3,1,NaN)
@@ -174,7 +189,9 @@ as.numeric(x)
 Warning message:
 NAs introduced by coercion
 
-# Data Frames
+``` 
+
+## Data Frames
 
 Used to store tabular data. Elements not all of the same type unlike matrices.
 
@@ -194,13 +211,13 @@ Error: could not find function "ncols"
 > ncol(x)
 [1] 2
 
-# Name attribute
+## Name attribute
 
 lists and vectors can have them
 
 x <- list(foo=1,bar=3)
 
-# Reading Data
+## Reading Data
 
 read.table, read.csv
 readLines
@@ -209,23 +226,27 @@ dget (inverse of dput)
 load (for reading in saved workspaces)
 unserialize
 
-## read.table
+### read.table
 
 read everything on memory.
 optimize by specifiying type of data. Easy trick: read first 100 lines and deduce classes from it, specify classes for the rest using deduced classes:
 
+``` R
 firstHondo <- read.table("datatable.txt",nrows=100)
 classes <- sapply(firstHondo,class)
 all <- read.table("datatable.txt",colClasses=classes)
+
+``` 
 
 rule of thumb according to video: guess  twice as much memory as the size of the object calculated colsxrowsx size of data cell
 
 apply(X, MARGIN, FUN, ...)
 
-MARGIN	
+## MARGIN	
 a vector giving the subscripts which the function will be applied over. E.g., for a matrix 1 indicates rows, 2 indicates columns, c(1, 2) indicates rows and columns. Where X has named dimnames, it can be a character vector selecting dimension names.
 
 This is why the question regarding means in a given table for a subset of the columns has an answer like
+
 ``` R
  apply(iris[, 1:4], 2, mean)
 
@@ -233,18 +254,22 @@ This is why the question regarding means in a given table for a subset of the co
 
 serialize and desirialize including metadata with dput and dget
 
+``` R
+ 
 > y <- data.frame(a=1,b="foo")
 > dput(y)
 structure(list(a = 1, b = structure(1L, .Label = "foo", class = "factor")), .Names = c("a", 
 "b"), row.names = c(NA, -1L), class = "data.frame")
 > dput(y,file="Y.R")
 
+``` 
+
 
 ## Connection interfaces
 
 Trivially simple functions to open files, urls, gzipped files.
 
-## Subsetting
+# Subsetting
 
  [ ] single bracket always subsets and returns the same type.
  [[ ]] double bracket an element
@@ -338,7 +363,7 @@ subsetting by condition on a row:
 
 ``` R
 m[m[, "three"] == 11,] 
-``` 
+
 
 
 > airquality[1:6, ]
@@ -357,9 +382,12 @@ m[m[, "three"] == 11,]
 3 12 149 12.6 74 5 3
 4 18 313 11.5 62 5 4
 7 23 299 8.6 65 5 7
+```
 
 ## Vectorize operations
 
+``` R
+ 
 > x <- 1:4; y <- 6:9
 > x + y
 [1] 7 9 11 13
@@ -374,8 +402,13 @@ m[m[, "three"] == 11,]
 > x / y
 [1] 0.1666667 0.2857143 0.3750000 0.4444444
 
+``` 
+
+
 ## Vectorized Matrix operations
 
+``` R
+ 
 x <- matrix(1:4, 2, 2); y <- matrix(rep(10, 4), 2, 2)
 x * y ## element-wise multiplication
 # [,1] [,2]
@@ -389,6 +422,8 @@ x %*% y ## true matrix multiplication
 # [,1] [,2]
 #[1,] 40 40
 #[2,] 60 60
+
+
 
 > d <- matrix(c(3,3,4,4,-2,-2),3,2)
 > d
@@ -421,12 +456,14 @@ Error in e %*% d : non-conformable arguments
      [,1] [,2]
 [1,]   29  -16
 [2,]   38    6
+```
+
 
 Notice that R "fills out" the matrices using the data frame into the matrtx from "top to bottom, left to right"
 
-## Control Structures
+# Control Structures
 
-### Conditional
+## Conditional
 
 The typical, plus repeat for infinite loops and this syntactic sugar for assignments:
 
@@ -438,7 +475,7 @@ y <- if (x > 3) {
 }
 ```
 
-### Loops
+## Loops
 
 ``` R
 x <- c("a", "b", "c", "d")
@@ -600,7 +637,8 @@ $b
  - colSums = apply(x, 2, sum)
  - colMeans = apply(x, 2, mean)
 
-# mapply, tapply
+## mapply, tapply
+
 a way to apply a funcition to multiple sets of arguments. multivariate apply
 
 can be used to roughly vectorize a function.
@@ -674,4 +712,74 @@ probablility distributions usually have four flavors associated with them: d for
 > summary(x)
      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
 -3.819000 -0.676800  0.006453  0.002063  0.683100  3.714000
+```
+
+## Generating Randoms from a linear model
+
+What about generating random not from a typical distribution but a linear model?
+
+Suppose y = Bo + B1*x + e
+
+where e ~ N(0.2^2). Assume x ~ N(0.1^2), Bo = 0.5 and B1 = 2
+
+``` R
+ set.seed(20)
+ x <- rnorm(100)
+ e <- rnorm(100,0,2)
+ y <- 0.5 + 2 * x + e
+ summary(y)
+ plot(x,y)
+
 ``` 
+
+Generating random numbers from a linear model with binary x:
+
+``` R
+ set.seed(20)
+ x <- rbinom(100,1,0.5)
+ e <- rnorm(100,0,2)
+ y <- 0.5 + 2 * x + e
+ summary(y)
+ plot(x,y)
+```
+
+An example with a non-linear error:
+
+``` R
+ set.seed(20)
+ x <- rnorm(100)
+ log.mu <- 0.5 +0.3 * x
+ y <- rpois(100,exp(log.mu))
+ summary(y)
+ plot(x,y)
+```
+
+## Random Sampling
+
+sample takes a sample of the specified size from the elements of x using either with or without replacement.
+
+sample(x, size, replace = FALSE, prob = NULL)
+
+# R Profiling
+
+## System.time
+
+ - system.time()
+
+``` R
+system.time(readLines("http://www.jhsph.edu"))
+ user system elapsed
+ 0.004 0.002 0.431
+```
+
+Normally elapsed (perceived)  >= user (cpu usage)
+
+elapsed can be smaller than user in multi-core. R isn't multi-core enabled but linear algebra and other libraries it links to are.
+
+## R Profiler
+
+ - Rprof() function starts to profiler.
+ - summaryRprof() summarizes results in readable format
+
+Rprof keeps track of the function call stack at regularly sampled intervals and tabulates how much time is spent on each functions. Default sampling interval is 0.02.
+
