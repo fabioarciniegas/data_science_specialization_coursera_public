@@ -290,6 +290,10 @@ In Ops.factor(left, right) : ‘>’ not meaningful for factors
 
 ## Subsetting lists
 
+``` R
+ 
+
+
 > x <- list(foo = 1:4, bar = 0.6, baz = "hello")
 > name <- "foo"
 > x[[name]] ## computed index for ‘foo’
@@ -306,20 +310,29 @@ x[[c(1, 3)]]
 #[1] 14
 x[[c(2, 1)]]
 #[1] 3.14
+```
 
 ## Subsetting matrices
 
 Similarly, subsetting a single column or a single row will give you a vector, not a matrix (by default).
+
+``` R
+ 
+
 > x <- matrix(1:6, 2, 3)
 > x[1, ]
 [1] 1 3 5
 > x[1, , drop = FALSE]
  [,1] [,2] [,3]
 [1,] 1 3 5
+``` 
 
 ## Partial Matching
 
 Partial matching of names is allowed with [[ and $.
+
+``` R
+ 
 > x <- list(aardvark = 1:5)
 > x$a
 [1] 1 2 3 4 5
@@ -328,19 +341,25 @@ NULL
 > x[["a", exact = FALSE]]
 [1] 1 2 3 4 5
 
+``` 
+
 ## Removing NA values
 
 A common task is to remove missing values (NAs).
-> x <- c(1, 2, NA, 4, NA, 5)
+
+``` R
+ > x <- c(1, 2, NA, 4, NA, 5)
 > bad <- is.na(x)
 > x[!bad]
 [1] 1 2 4 5
-
+``` 
 
 ## Removing NA Values , more cases
 
 use complete.cases if you have to make the decision of completeness based on multiple vectors or multiple values in data frames
 
+``` R
+ 
  x <- c(1, 2, NA, 4, NA, 5)
 > y <- c("a", "b", NA, "d", NA, "f")
 > good <- complete.cases(x, y)
@@ -351,9 +370,10 @@ use complete.cases if you have to make the decision of completeness based on mul
 > y[good]
 [1] "a" "b" "d" "f"
 
-Also very important but not mentioned in slides?
+``` 
 
-subsetting by condition on a row:
+Also very important but not mentioned in slides: subsetting by condition on a row:
+
 ``` R
        one two three four
  [1,]   1   6    11   16
@@ -363,9 +383,11 @@ subsetting by condition on a row:
 
 ``` R
 m[m[, "three"] == 11,] 
+```
 
+more examples of subsetting:
 
-
+``` R
 > airquality[1:6, ]
  Ozone Solar.R Wind Temp Month Day
 1 41 190 7.4 67 5 1
@@ -382,7 +404,9 @@ m[m[, "three"] == 11,]
 3 12 149 12.6 74 5 3
 4 18 313 11.5 62 5 4
 7 23 299 8.6 65 5 7
-```
+
+``` 
+
 
 ## Vectorize operations
 
