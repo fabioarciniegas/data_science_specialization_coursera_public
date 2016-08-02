@@ -785,7 +785,7 @@ Rprof keeps track of the function call stack at regularly sampled intervals and 
 
 normalizing the data:
  - by.total
-   -by.self (divides the time spent in each function by the total run time but first substracts out time spent in functions above in the call stack)
+  -by.self (divides the time spent in each function by the total run time but first substracts out time spent in functions above in the call stack). More often useful according to video to identify bottlenecks.
 
-By self more often useful according to video to identify bottlenecks.
+August 02, 2016 (15:46:13) Fabio Arciniegas
 
