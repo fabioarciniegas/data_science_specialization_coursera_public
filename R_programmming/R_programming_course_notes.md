@@ -58,13 +58,16 @@ inspect with atttributes function
 
 c() function to create vectors of objects ("concatenate")
 
+``` R
 x <- c(TRUE,FALSE)
 x <- c(T,F)
 x<-  c("a","b","c")
 x<- 9:29
 x <- vector("numeric", length=10)
 
+``` 
 ## mixing
+
 Mixing results in least common denominator, meaning the one that can be represented most generally
 
 
@@ -217,6 +220,17 @@ all <- read.table("datatable.txt",colClasses=classes)
 
 rule of thumb according to video: guess  twice as much memory as the size of the object calculated colsxrowsx size of data cell
 
+apply(X, MARGIN, FUN, ...)
+
+MARGIN	
+a vector giving the subscripts which the function will be applied over. E.g., for a matrix 1 indicates rows, 2 indicates columns, c(1, 2) indicates rows and columns. Where X has named dimnames, it can be a character vector selecting dimension names.
+
+This is why the question regarding means in a given table for a subset of the columns has an answer like
+``` R
+ apply(iris[, 1:4], 2, mean)
+
+``` 
+
 serialize and desirialize including metadata with dput and dget
 
 > y <- data.frame(a=1,b="foo")
@@ -238,6 +252,7 @@ Trivially simple functions to open files, urls, gzipped files.
 
 using a condition for subsetting is referred to as "logical index" in the video:
 
+``` R
 > x <- c("a","b","c","d","e")
 > x[x>"b"]
 [1] "c" "d" "e"
@@ -245,6 +260,8 @@ using a condition for subsetting is referred to as "logical index" in the video:
 [1] NA NA
 Warning message:
 In Ops.factor(left, right) : ‘>’ not meaningful for factors
+
+``` 
 
 ## Subsetting lists
 
@@ -294,6 +311,7 @@ A common task is to remove missing values (NAs).
 > x[!bad]
 [1] 1 2 4 5
 
+
 ## Removing NA Values , more cases
 
 use complete.cases if you have to make the decision of completeness based on multiple vectors or multiple values in data frames
@@ -307,6 +325,20 @@ use complete.cases if you have to make the decision of completeness based on mul
 [1] 1 2 4 5
 > y[good]
 [1] "a" "b" "d" "f"
+
+Also very important but not mentioned in slides?
+
+subsetting by condition on a row:
+``` R
+       one two three four
+ [1,]   1   6    11   16
+ [3,]   3   8    11   18
+ [4,]   4   9    11   19
+``` 
+
+``` R
+m[m[, "three"] == 11,] 
+``` 
 
 
 > airquality[1:6, ]
@@ -499,5 +531,147 @@ POSIXct and POSIXlt for times. Dates as integers since the unix epoch.
 
 basic comments about time date for non-programmers. Just do as.Date and as.POSIXct ?strptime.
 
+### An example of how ugly and antiquated R can look
+
+``` R
+ h <- function(x, y = NULL, d = 3L) {
+        z <- cbind(x, d)
+        if(!is.null(y))
+                z <- z + y
+        else
+                z <- z + f
+        g <- x + y / z
+        if(d == 3L)
+                return(g)
+        g <- g + 10
+        g
+}
+
+```
+
+## apply ( basic forward stl-like generics)
+
+ the two most fundamental members of R's *apply family of functions: lapply() and sapply(). Both take a list as input, apply a function to each element of the list, then combine and return the result. lapply() always returns a list, whereas sapply() attempts to simplify the result.
+
+- lapply(list,function,...)  apply to each. always returns a list. args may be coerced
+ -  lists ~ associative arrays
+ - sapply tries to simplify the result of lapply. e.g. if every element on the list only has one number, turn it into a vector.
 
 
+``` R
+x <- list(a = matrix(1:4, 2, 2), b = matrix(1:6, 3, 2))
+x
+$a
+ [,1] [,2]
+[1,] 1 3
+[2,] 2 4
+$b
+ [,1] [,2]
+[1,] 1 4
+[2,] 2 5
+[3,] 3 6
+
+lapply(x, function(elt) elt[,1])
+$a
+[1] 1 2
+$b
+[1] 1 2 3
+
+
+> x <- matrix(rnorm(200), 20, 10)
+> apply(x, 2, mean)
+ [1] 0.04868268 0.35743615 -0.09104379
+ [4] -0.05381370 -0.16552070 -0.18192493
+ [7] 0.10285727 0.36519270 0.14898850
+[10] 0.26767260
+> apply(x, 1, sum)
+ [1] -1.94843314 2.60601195 1.51772391
+ [4] -2.80386816 3.73728682 -1.69371360
+ [7] 0.02359932 3.91874808 -2.39902859
+[10] 0.48685925 -1.77576824 -3.34016277
+[13] 4.04101009 0.46515429 1.83687755
+[16] 4.36744690 2.21993789 2.60983764
+[19] -1.48607630 3.58709251
+
+
+``` 
+ - rowSums = apply(x, 1, sum)
+ - rowMeans = apply(x, 1, mean)
+ - colSums = apply(x, 2, sum)
+ - colMeans = apply(x, 2, mean)
+
+# mapply, tapply
+a way to apply a funcition to multiple sets of arguments. multivariate apply
+
+can be used to roughly vectorize a function.
+
+tapply similar but used to apply to groups
+
+common idiom to do lapply in combination with split. This is sometimes termed as The Split-Apply-Combine Strategy for Data Analysis'
+
+``` R
+> lapply(split(x, f), mean)
+$‘1‘
+[1] 0.1144464
+$‘2‘
+[1] 0.5163468
+$‘3‘
+[1] 1.246368 
+
+```
+
+## Splitting on more than one level
+
+``` R
+ > x <- rnorm(10)
+> f1 <- gl(2, 5)
+> f2 <- gl(5, 2)
+> f1
+ [1] 1 1 1 1 1 2 2 2 2 2
+Levels: 1 2
+> f2
+ [1] 1 1 2 2 3 3 4 4 5 5
+Levels: 1 2 3 4 5
+> interaction(f1, f2)
+ [1] 1.1 1.1 1.2 1.2 1.3 2.3 2.4 2.4 2.5 2.5
+10 Levels: 1.1 2.1 1.2 2.2 1.3 2.3 1.4 ... 2.5
+
+```
+
+## Debugging
+
+ - traceback
+ - debug
+ - trace
+ - browser
+ - recover
+
+error messages produced by the stop() function. Conditions and Warnings by the obvious.
+
+## Swirl (exercise package)
+
+vapply() as a safer alternative to sapply(), specifies expected type of return.
+tapply() to split your data into groups based on the value of some variable, then apply a function to each group.
+
+# Simulation and Profiling
+
+## str function
+
+Display structure of the function or object passed (really string). Simply a quick way to inspect similar to a toString() in other languages.
+
+## Generating Random Numbers
+
+ - rnorm: generate random Normal variables with a given mean and std deviation
+ - dnorm: evaluate the normal probabilty distribution at a point
+  - pnorm: evaluate the cumulative distribution function for a normal dist
+  - rpois: generate a random poisson variables with a given rate
+
+probablility distributions usually have four flavors associated with them: d for density, r for random number generation, p for cumulative distribution, q for quantile function
+
+``` R
+ > set.seed(20)
+> x <- rnorm(20000)
+> summary(x)
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-3.819000 -0.676800  0.006453  0.002063  0.683100  3.714000
+``` 
