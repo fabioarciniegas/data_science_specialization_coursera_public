@@ -783,3 +783,9 @@ elapsed can be smaller than user in multi-core. R isn't multi-core enabled but l
 
 Rprof keeps track of the function call stack at regularly sampled intervals and tabulates how much time is spent on each functions. Default sampling interval is 0.02.
 
+normalizing the data:
+ - by.total
+   -by.self (divides the time spent in each function by the total run time but first substracts out time spent in functions above in the call stack)
+
+By self more often useful according to video to identify bottlenecks.
+
