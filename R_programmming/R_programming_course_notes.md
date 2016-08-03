@@ -37,7 +37,7 @@ A vector can only contain objects of the same class. Except for lists which is a
 
 Numbers treated as "numeric" objects by default (double precision real numbers)
 
-#  Inf for infinity, NaN for Not a number
+##  Inf for infinity, NaN for Not a number
 
 R objects can have attributes
 
@@ -238,9 +238,13 @@ all <- read.table("datatable.txt",colClasses=classes)
 
 ``` 
 
-rule of thumb according to video: guess  twice as much memory as the size of the object calculated colsxrowsx size of data cell
+rule of thumb according to video: guess  twice as much memory as the size of the object calculated colsxrowsx size of data cell.
+
+Apply functions over array margins (columns or rows):
 
 apply(X, MARGIN, FUN, ...)
+
+similar is lapply which is a bit more typical, just apply function to list
 
 ## MARGIN	
 a vector giving the subscripts which the function will be applied over. E.g., for a matrix 1 indicates rows, 2 indicates columns, c(1, 2) indicates rows and columns. Where X has named dimnames, it can be a character vector selecting dimension names.
@@ -274,6 +278,36 @@ Trivially simple functions to open files, urls, gzipped files.
  [ ] single bracket always subsets and returns the same type.
  [[ ]] double bracket an element
  $ extract from data frame or list by name
+
+### Extra: cheatsheet on subsetting matrices
+
+``` R
+m <- matrix(1:12,ncol=4)
+colnames(m) <- c("A","B","C","D")
+m
+     A B C  D
+[1,] 1 4 7 10
+[2,] 2 5 8 11
+[3,] 3 6 9 12
+
+m[3,]
+ A  B  C  D 
+ 3  6  9 12 
+
+m[,3]
+[1] 7 8 9
+
+m[,"C"] %% 2 > 0
+[1]  TRUE FALSE  TRUE
+
+m[m[,"C"] %% 2 > 0,]
+     A B C  D
+[1,] 1 4 7 10
+[2,] 3 6 9 12
+
+``` 
+
+### Subsetting as shown in the videos
 
 using a condition for subsetting is referred to as "logical index" in the video:
 
@@ -811,5 +845,5 @@ normalizing the data:
  - by.total
   -by.self (divides the time spent in each function by the total run time but first substracts out time spent in functions above in the call stack). More often useful according to video to identify bottlenecks.
 
-August 02, 2016 (15:46:13) Fabio Arciniegas
 
+https://www.coursera.org/account/accomplishments/certificate/KMKCVBW4PSYS
